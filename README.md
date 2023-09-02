@@ -1,3 +1,14 @@
+# `@aztemi/svelte-on-solana-wallet-adapter`
+
+This is a fork of [svelte-on-solana/wallet-adapter](https://github.com/svelte-on-solana/wallet-adapter) with the following additional updates.
+
+-   Wallet Standard support
+-   Dependencies upgraded to recent versions
+-   Accessibility warnings fixed
+-   NPM packages released under `@aztemi` scope since `@svelte-on-solana` is no more maintained.
+
+Original ReadMe below:
+
 # `@svelte-on-solana/wallet-adapter`
 
 ![Wallets](wallets-adapter.png)
