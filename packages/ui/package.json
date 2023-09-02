@@ -9,6 +9,7 @@
 		"directory": "package"
 	},
 	"scripts": {
+		"clean": "shx rm -rf package",
 		"build": "svelte-kit package",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
