@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { isWalletAdapterCompatibleWallet, StandardWalletAdapter } from '@solana/wallet-standard-wallet-adapter-base';
 	import { getWallets } from '@wallet-standard/app';
-	import { initialize } from '@svelte-on-solana/wallet-adapter-core';
+	import { initialize } from '@aztemi/svelte-on-solana-wallet-adapter-core';
 	import type { Adapter } from '@solana/wallet-adapter-base';
 	import type { Wallet } from '@wallet-standard/base';
 	import type { WalletError } from '@solana/wallet-adapter-base';
