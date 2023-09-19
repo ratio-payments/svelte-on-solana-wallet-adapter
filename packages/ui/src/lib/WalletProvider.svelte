@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { WalletReadyState, isWalletAdapterCompatibleStandardWallet } from '@solana/wallet-adapter-base';
 	import { StandardWalletAdapter } from '@solana/wallet-standard-wallet-adapter-base';
 	import { getWallets } from '@wallet-standard/app';
@@ -10,24 +11,24 @@
 		autoConnect = false,
 		onError = (error: WalletError) => console.error(error);
 
-	$: {
-		if (wallets.length) {
-			// get installed wallets compatible with the standard
-			const { get } = getWallets();
-			const standardWallets = get()
-				.filter(isWalletAdapterCompatibleStandardWallet)
-				.map((wallet) => new StandardWalletAdapter({ wallet }));
+	$: wallets.length && updateWallets();
 
-			// filter out non standard wallets
-			const nonStandardWallets = wallets.filter(
-				(wallet) => !standardWallets.some(({ name }) => wallet.name === name)
-			);
+	function updateWallets() {
+		// get installed wallets compatible with the standard
+		const { get } = getWallets();
+		const standardWallets = get()
+			.filter(isWalletAdapterCompatibleStandardWallet)
+			.map((wallet) => new StandardWalletAdapter({ wallet }));
 
-			// merge, sort and initialize wallets store
-			const allWallets = [...standardWallets, ...nonStandardWallets];
-			allWallets.sort(installedAdaptersFirst);
-			initialize({ wallets: allWallets, autoConnect, localStorageKey, onError });
-		}
+		// filter out non standard wallets
+		const nonStandardWallets = wallets.filter(
+			(wallet) => !standardWallets.some(({ name }) => wallet.name === name)
+		);
+
+		// merge, sort and initialize wallets store
+		const allWallets = [...standardWallets, ...nonStandardWallets];
+		allWallets.sort(installedAdaptersFirst);
+		initialize({ wallets: allWallets, autoConnect, localStorageKey, onError });
 	}
 
 	function installedAdaptersFirst(a: Adapter, b: Adapter): number {
@@ -38,6 +39,16 @@
 		if (!isInstalled(a) && isInstalled(b)) sort = 1;
 		return sort;
 	}
+
+	onMount(() => {
+		const { on } = getWallets();
+		const removeRegisterListener = on('register', updateWallets);
+		const removeUnregisterListener = on('unregister', updateWallets);
+		return () => {
+			removeRegisterListener();
+			removeUnregisterListener();
+		};
+	});
 </script>
 
 <svelte:head>
