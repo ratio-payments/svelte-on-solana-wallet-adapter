@@ -6,7 +6,7 @@ This is a fork of [svelte-on-solana/wallet-adapter](https://github.com/svelte-on
 -   Wallets list sorted to show installed wallets first
 -   Dependencies upgraded to recent versions
 -   Accessibility warnings fixed
--   NPM packages released under `@aztemi` scope since `@svelte-on-solana` is no more maintained.
+-   NPM packages released under `@aztemi` scope since `@svelte-on-solana` is not recently maintained.
 
 Original ReadMe below:
 
