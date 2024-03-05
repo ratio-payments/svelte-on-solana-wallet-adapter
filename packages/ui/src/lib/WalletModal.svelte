@@ -4,7 +4,7 @@
     import { createEventDispatcher } from 'svelte';
     import WalletButton from './WalletButton.svelte';
     import { clickOutside } from './clickOutside';
-    import type { WalletName } from '@solana/wallet-adapter-base';
+    import { WalletReadyState, type WalletName } from '@solana/wallet-adapter-base';
 
     export let maxNumberOfWallets;
 
@@ -16,7 +16,9 @@
         : maxNumberOfWallets;
 
     $: walletsAvailable = $walletStore.wallets.filter(
-        wallet => wallet.readyState === 'Installed',
+		(wallet) =>
+			wallet.readyState === WalletReadyState.Installed ||
+			wallet.readyState === WalletReadyState.Loadable
     ).length;
 
     const dispatch = createEventDispatcher();
@@ -96,7 +98,7 @@
                                 </svelte:fragment>
 
                                 <svelte:fragment slot="status">
-                                    {readyState === 'Installed'
+                                    {readyState === WalletReadyState.Installed
                                         ? 'Detected'
                                         : ''}
                                 </svelte:fragment>
@@ -281,7 +283,7 @@
                                     </svelte:fragment>
 
                                     <svelte:fragment slot="status">
-                                        {readyState === 'Installed'
+                                        {readyState === WalletReadyState.Installed
                                             ? 'Detected'
                                             : ''}
                                     </svelte:fragment>
