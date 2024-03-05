@@ -40,17 +40,21 @@
 		const mobileWallet = getMobileWallet(allWallets);
 		if (mobileWallet) allWallets.unshift(mobileWallet);
 
-		// sort and initialize wallets store
-		allWallets.sort(installedAdaptersFirst);
+		// sort 'Installed' wallets first and 'Loadable' next
+		const installedFirst = (a: Adapter, b: Adapter) => detectedFirst(WalletReadyState.Installed, a, b);
+		const loadableFirst = (a: Adapter, b: Adapter) => detectedFirst(WalletReadyState.Loadable, a, b);
+		allWallets.sort(loadableFirst).sort(installedFirst);
+
+		// initialize wallets store
 		initialize({ wallets: allWallets, autoConnect, localStorageKey, onError });
 	}
 
-	function installedAdaptersFirst(a: Adapter, b: Adapter): number {
+	function detectedFirst(state: WalletReadyState, a: Adapter, b: Adapter) {
 		let sort: number = 0;
-		const isInstalled = (c: Adapter) => c.readyState === WalletReadyState.Installed;
+		const isDetected = (c: Adapter) => c.readyState === state;
 
-		if (isInstalled(a) && !isInstalled(b)) sort = -1;
-		if (!isInstalled(a) && isInstalled(b)) sort = 1;
+		if (isDetected(a) && !isDetected(b)) sort = -1;
+		if (!isDetected(a) && isDetected(b)) sort = 1;
 		return sort;
 	}
 
