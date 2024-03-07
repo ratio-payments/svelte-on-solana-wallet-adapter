@@ -17,7 +17,7 @@
 
 	export let localStorageKey: string,
 		wallets: Adapter[] = [],
-		autoConnect = false,
+		autoConnect: boolean | ((adapter: Adapter) => boolean) = false,
 		onError = (error: WalletError) => console.error(error);
 
 	$: wallets.length && updateWallets();

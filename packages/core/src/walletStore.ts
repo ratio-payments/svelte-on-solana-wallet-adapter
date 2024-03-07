@@ -27,7 +27,7 @@ type WalletStatus = Pick<WalletStore, 'connected' | 'publicKey'>;
 
 export interface WalletStore {
 	// props
-    autoConnect: boolean;
+    autoConnect: boolean | ((adapter: Adapter) => boolean);
     wallets: Wallet[];
 
 	// wallet state
@@ -344,9 +344,10 @@ async function sendTransaction(
 
 function shouldAutoConnect(): boolean {
     const { adapter, autoConnect, ready, connected, connecting } = get(walletStore);
+    const _autoConnect = (adapter && typeof autoConnect === "function") ? autoConnect(adapter) : autoConnect;
 
     return !(
-        !autoConnect ||
+        !_autoConnect ||
         !adapter ||
         !(
           ready === WalletReadyState.Installed ||
