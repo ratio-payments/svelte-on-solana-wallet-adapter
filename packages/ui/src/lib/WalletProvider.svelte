@@ -26,15 +26,14 @@
 		// get installed wallets compatible with the standard
 		const { get } = getWallets();
 		const standardWallets = get()
+			// select wallets compatible with the Wallet Standard
 			.filter(isWalletAdapterCompatibleStandardWallet)
+			// select wallets not already configured by the dapp
+			.filter((wallet) => !wallets.some(({ name }) => wallet.name === name))
+			// wrap as a Standard Adapter class
 			.map((wallet) => new StandardWalletAdapter({ wallet }));
 
-		// filter out non standard wallets
-		const nonStandardWallets = wallets.filter(
-			(wallet) => !standardWallets.some(({ name }) => wallet.name === name)
-		);
-
-		const allWallets = [...standardWallets, ...nonStandardWallets];
+		const allWallets = [...standardWallets, ...wallets];
 
 		// merge standard mobile wallet if available
 		const mobileWallet = getMobileWallet(allWallets);
